@@ -1,0 +1,5 @@
+[functions.detect-overdue]
+verify_jwt = false
+
+[functions.detect-overdue.schedule]
+cron = "0 6 * * *"
