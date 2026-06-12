@@ -4,3 +4,5 @@ dist/
 .DS_Store
 *.log
 .supabase/
+ssh_key
+ssh_key.pub
