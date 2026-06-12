@@ -1,4 +1,5 @@
 -- 1. Create default Supabase roles for local development
+CREATE SCHEMA IF NOT EXISTS auth;
 CREATE ROLE anon NOLOGIN;
 CREATE ROLE authenticated NOLOGIN;
 CREATE ROLE service_role NOLOGIN;
