@@ -1,4 +1,23 @@
+-- 1. Create default Supabase roles for local development
+CREATE ROLE anon NOLOGIN;
+CREATE ROLE authenticated NOLOGIN;
+CREATE ROLE service_role NOLOGIN;
 
+-- 3. Mock the auth.uid() function so RLS policies don't crash
+CREATE OR REPLACE FUNCTION auth.uid()
+RETURNS UUID 
+LANGUAGE sql STABLE 
+AS $$
+  -- Returns a blank UUID just to satisfy the database compiler
+  SELECT '00000000-0000-0000-0000-000000000000'::uuid;
+$$;
+
+-- 2. Create a mock auth schema and users table
+CREATE SCHEMA IF NOT EXISTS auth;
+CREATE TABLE IF NOT EXISTS auth.users (
+    id UUID PRIMARY KEY,
+    email TEXT
+);
 -- Enums
 CREATE TYPE public.app_role AS ENUM ('admin', 'user');
 CREATE TYPE public.asset_status AS ENUM ('active', 'inactive');
