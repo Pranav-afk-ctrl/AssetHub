@@ -1,229 +1,91 @@
-# AssetHub — Smart Asset Management and Resource Allocation Platform
+# AssetHub — Asset Management System (Testing Guide)
 
-> Built for the Cultural Council of IIT Roorkee · Cult Open Projects 2026 · PS-1
+AssetHub is a full-stack asset booking and allocation platform. Employees browse available company assets, request bookings, and track their reservations. Administrators manage inventory, approve requests, issue and return items, and monitor system activity through an analytics dashboard.
 
-AssetHub is a full-stack web application that enables organizations to manage shared resources — from DSLR cameras and audio systems to stage props and event infrastructure — through a centralized, role-based digital platform.
+This repository contains the complete environment configured to talk to a **live database cluster backend**. Follow the steps below to build, run, and review the web application on your local machine.
 
----
+##  Prerequisites for Testing
 
-## Table of Contents
+Before running the application, please ensure your computer has the following tools installed:
 
-- [Project Overview](#project-overview)
-- [Technology Stack](#technology-stack)
-- [Feature List](#feature-list)
-- [Setup Instructions](#setup-instructions)
-- [Running the Application](#running-the-application)
-- [Database Setup](#database-setup)
-- [Environment Variables](#environment-variables)
-- [Docker (Optional)](#docker-optional)
-- [Team](#team)
+1. **Git:** To download the codebase.
+2. **Docker Desktop:** This handles all the installation and server setup for you. You can download it at [docker.com](https://www.docker.com/products/docker-desktop/).
+   *  **Crucial:** You must actually open the Docker Desktop application and let it run in the background before typing any commands!
 
 ---
 
-## Project Overview
+##  Step-by-Step Setup Instructions
 
-The Cultural Council of IIT Roorkee manages a large pool of shared resources across multiple sections and events. Currently, coordination relies on spreadsheets, manual registers, and fragmented communication. AssetHub replaces this with:
-
-- A centralized inventory for administrators to manage assets
-- A booking system for users to request resources for specific durations
-- An approval workflow for administrators to review, approve, or reject requests
-- An issue and return management system with due date tracking
-- An analytics dashboard with real-time utilization insights
-- QR code generation for quick asset identification
-
----
-
-## Technology Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | React 18, TypeScript, Vite |
-| UI Components | shadcn/ui, Tailwind CSS |
-| Charts | Recharts |
-| Backend / Database | Supabase (PostgreSQL) |
-| Authentication | Supabase Auth (JWT) |
-| Authorization | Row Level Security (RLS) |
-| QR Codes | qrcode.react, html-to-image |
-| Deployment | Lovable (hosted), Docker (local) |
-
----
-
-## Feature List
-
-### Core Features (Mandatory)
-
-**Authentication**
-- User registration and login
-- Role-based access: `admin` and `user`
-- Secure JWT sessions via Supabase Auth
-
-**Inventory Management (Admin)**
-- Add, edit, delete assets
-- Categorize assets (Camera, Audio, Lighting, Costume, Props, etc.)
-- Manage available quantities
-- Asset status tracking (Available, Low Stock, Unavailable)
-
-**Asset Discovery and Booking (User)**
-- Browse and search all available assets
-- Filter by category and availability
-- Request assets for a specific date range
-- Overbooking prevention — system blocks requests exceeding available stock
-
-**Approval Workflow (Admin)**
-- Review all pending booking requests
-- Approve or reject with optional admin notes
-- View all active allocations
-
-**Issue and Return Management (Admin)**
-- Mark approved bookings as issued
-- Record asset returns
-- Overdue tracking with visual highlighting
-- Inventory counts update automatically at each stage
-
-**Analytics Dashboard (Admin)**
-- Summary cards: active bookings, available inventory, overdue returns
-- Bar chart: most frequently utilized assets
-- Pie chart: booking status distribution
-- Line graph: 30-day booking trend
-
-**Borrowing History**
-- Users: view personal booking history with status badges
-- Admin: system-wide activity log
-
-### Bonus Features
-
-- **QR Code Generation** — Generate and download QR codes for each asset (contains asset ID, name, category)
-- **Audit Logs** — All key actions logged (asset creation, approvals, returns)
-- **Docker Support** — `docker-compose.yml` for reproducible local setup
-
----
-
-## Setup Instructions
-
-### Prerequisites
-
-- Node.js v18 or higher
-- npm v9 or higher
-- A Supabase account (free tier works)
-- Git
-
-### 1. Clone the repository
+### Step 1: Download the Project
+Open your computer's terminal (or Command Prompt / PowerShell on Windows), navigate to where you want to save the project, and run these commands:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/assethub.git
-cd assethub
+git clone https://github.com/Pranav-afk-ctrl/AssetHub.git
+cd frontend
 ```
 
-### 2. Install dependencies
+### Step 2: Start the Server
+Now, let Docker do the heavy lifting. In your terminal (make sure you are inside the `mindful-deploy` folder), run:
 
 ```bash
-npm install
+docker compose up --build
 ```
+*Wait a few moments. When you see a green message saying something like `VITE ready in 1200 ms`, the app is live!*
 
-### 3. Set up Supabase
+### Step 4: Open the Application
+Open Google Chrome or Firefox and navigate to:
+ **http://localhost:5173**
 
-1. Go to [supabase.com](https://supabase.com) and create a new project
-2. In the SQL Editor, run the migration script:
-
-```bash
-# All migrations are in /supabase/migrations/
-# Run them in order in the Supabase SQL Editor
-```
-
-3. Copy your project credentials:
-   - Go to Project Settings → API
-   - Copy the **Project URL** and **anon public key**
-
-### 4. Configure environment variables
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` and fill in your Supabase credentials (see [Environment Variables](#environment-variables)).
+*(Leave the terminal running in the background while you test. When you are completely finished testing, click into the terminal and press `Ctrl + C` to shut the server down).*
 
 ---
 
-## Running the Application
+##  Test Accounts & Credentials
 
-### Development
+To test the different experiences without needing to set up a database or confirm emails, use these pre-configured accounts:
 
-```bash
-npm run dev
-```
+###  Administrator Account
+Use this to bypass security constraints, grant complete administrative control to manage inventory, approve or reject requests, and view analytics.
+* **Email:** `admintester@gmail.com`
+* **Password:** `admin@123`  
+***(Use exactly these for admin login)***
 
-App runs at `http://localhost:5173`
-
-### Production Build
-
-```bash
-npm run build
-npm run preview
-```
-
-### Default Admin Setup
-
-After running migrations, create an admin account:
-
-1. Register a new account through the app
-2. In Supabase → Table Editor → `user_roles`, set `role = admin` for your user
+###  Standard Employee Account
+Use this profile to test regular user experiences, including asset catalog browsing, reservation requests, and personal booking history.
+* Use your email id to create a standard user account
 
 ---
 
-## Database Setup
+##  Troubleshooting
 
-All migration SQL files are located in `/supabase/migrations/`. Run them in order in the Supabase SQL Editor.
+If the app isn't loading, check this list:
 
-Key tables:
-- `profiles` — Extended user information
-- `user_roles` — Role assignments (admin/user)
-- `assets` — Asset inventory
-- `bookings` — Booking requests and lifecycle state
-- `audit_logs` — System-wide activity log
-
----
-
-## Environment Variables
-
-```env
-VITE_SUPABASE_URL=https://your-project-id.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-public-key
-```
-
-Never commit your `.env` file. The `.env.example` file shows the required variable names.
+* **Error: "Cannot connect to the Docker daemon"**
+  * **The Fix:** You forgot to open the Docker Desktop app! Open it, wait for the icon to turn green ("Engine Running"), and try the terminal command again.
+* **Error: "Address already in use" or "Failed to bind port 5173"**
+  * **The Fix:** You have another server running in the background taking up the port. Type `docker compose down` to clear any ghost containers, or simply restart your computer and try again.
+* **Browser says: "Unable to connect" or "Site cannot be reached"**
+  * **The Fix:** Modern browsers will sometimes aggressively auto-correct your address to `https://localhost:5173`. Because this is a local server, it does not have an HTTPS security certificate. Click into your address bar and delete the "s". It must be exactly `http://`.
+* **Browser shows a giant wall of red text (React Error Boundary)**
+  * **The Fix:** This means your `.env` file is missing or named incorrectly. Double-check that it is named `.env` (not `.env.txt`) and that you included the `VITE_SUPABASE_PUBLISHABLE_KEY` exactly as shown in Step 2. If you change the `.env` file, you must stop the terminal (`Ctrl + C`) and run `docker compose up --build` again to apply the changes.
 
 ---
 
-## Docker (Optional)
+##  Features & Tech Stack
 
-To run locally with Docker:
+### Tech Stack
+* **Frontend:** React 19, TypeScript, Vite 7
+* **Routing / SSR:** TanStack Router, TanStack Start
+* **Backend / DB:** Supabase Cloud (PostgreSQL, Real Auth, RLS)
+* **Styling:** Tailwind CSS 4, shadcn/ui, Radix UI
+* **Charts & Tools:** Recharts, qrcode.react, Docker Compose
 
-```bash
-docker compose up
-```
-
-This starts the React frontend on port `5173`. Supabase runs as a cloud service; only the frontend is containerized.
-
-```bash
-# Stop containers
-docker compose down
-```
-
----
-
-## Evaluation Criteria Addressed
-
-| Criterion | Coverage |
-|---|---|
-| Functionality & Feature Completeness (30%) | All mandatory features implemented |
-| System Design & Architecture (20%) | See Design Document |
-| Database Design & Backend Logic (15%) | Supabase PostgreSQL with RLS, atomic RPCs |
-| User Experience & Interface Design (15%) | shadcn/ui + Tailwind, responsive layout |
-| Code Quality & Documentation (10%) | TypeScript, modular components, this README |
-| Innovation & Additional Features (10%) | QR codes, audit logs, Docker |
-
----
-
-## Team
-
-Built for Cult Open Projects 2026, IIT Roorkee.
+### Core Features
+- **Role-Based Access:** Separate user and admin experiences with RLS policies.
+- **Asset Catalog & Booking:** Browse active assets, filter by category, and request items with specific quantities and dates.
+- **Atomic Approvals:** `approve_booking` RPC safely decrements inventory and logs audit entries in one secure transaction.
+- **Overdue Detection:** Issued bookings past their due date are automatically highlighted.
+- **Admin Dashboard:** Full CRUD operations for asset inventory and pending approval queues.
+- **Analytics:** Stats row, top assets chart, booking status pie chart, and 30-day trend lines.
+- **QR Generation:** Auto-generated, downloadable JSON payload QR codes for physical asset tagging.
+- **Audit Logs:** Complete admin activity feed tracking every system action.
