@@ -25,14 +25,14 @@ cd frontend
 ```
 
 ### Step 2: Start the Server
-Now, let Docker do the heavy lifting. In your terminal (make sure you are inside the `mindful-deploy` folder), run:
+Now, let Docker do the heavy lifting. In your terminal (make sure you are inside the `frontend` folder), run:
 
 ```bash
 docker compose up --build
 ```
 *Wait a few moments. When you see a green message saying something like `VITE ready in 1200 ms`, the app is live!*
 
-### Step 4: Open the Application
+### Step 3: Open the Application
 Open Google Chrome or Firefox and navigate to:
  **http://localhost:5173**
 
@@ -51,8 +51,8 @@ Use this to bypass security constraints, grant complete administrative control t
 ***(Use exactly these for admin login)***
 
 ###  Standard Employee Account
-Use this profile to test regular user experiences, including asset catalog browsing, reservation requests, and personal booking history.
-* Use your email id to create a standard user account
+
+* Use your email id to register a new standard user account and login using the same
 
 ---
 
